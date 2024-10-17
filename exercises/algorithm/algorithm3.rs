@@ -3,10 +3,43 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T: std::cmp::PartialOrd>(array: &mut [T]) {
+	//TODO    
+    let mut sink = |array: &mut [T], mut i: usize, heap_size: usize| {
+        loop {
+            let left_child = i * 2 + 1;
+            let right_child = i * 2 + 2;
+            
+            let largest_child: usize;
+            if i * 2 + 1 >= heap_size {
+                break;
+            } else if i * 2 + 2 >= heap_size || array[i * 2 + 1] >= array[i * 2 + 2] {
+                largest_child = left_child;
+            } else {
+                largest_child = right_child;
+            };
+            
+            if array[largest_child] <= array[i] {
+                break;
+            } else {
+                array.swap(i, largest_child);
+                i = largest_child;
+            };
+        };
+    };
+    
+    // build max heap
+    let array_len = array.len();
+    for i in (0..array_len).rev() {
+        sink(array, i, array_len);
+    };
+
+    // sort the array in place
+    for i in (1..array_len).rev() {
+        array.swap(0, i);
+        sink(array, 0, i);
+    };
 }
 #[cfg(test)]
 mod tests {
